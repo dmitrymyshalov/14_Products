@@ -1,0 +1,55 @@
+﻿<Window x:Class="Products.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Products"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="500">
+    <Window.Resources>
+        <local:CategoryConverter x:Key="convCategory"/>
+        <DataTemplate x:Key="templateProduct">
+            <Border BorderThickness="1" BorderBrush="Gray">
+                <Grid x:Name="grd">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/><!-- Дополнительные строки сверху и снизу для отцентровки по вертикали -->
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="*"/><!-- Прижимает содержимое влево -->
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Column="0" Width="70" Height="70" Grid.RowSpan="4" Source="{Binding Path=Picture}"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="Название:"/>
+                    <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding Path=Name}"/>
+                    <TextBlock Grid.Row="2" Grid.Column="2" Text="Цена:"/>
+                    <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding Path=Price, StringFormat={}{0:C}, ConverterCulture=ru-RU}"/>
+                    <TextBlock Grid.Row="3" Grid.Column="2" Text="Категория:"/>
+                    <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding Path=Category, Converter={StaticResource convCategory}}"/>
+                </Grid>
+            </Border>
+            
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Path=Category}">
+                    <DataTrigger.Value>
+                        <local:ProductCategories>Appliances</local:ProductCategories>
+                    </DataTrigger.Value>
+                    <Setter TargetName="grd" Property="Background" Value="LemonChiffon"/>
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+    </Window.Resources>
+
+    <StackPanel>
+        <TextBlock FontSize="20" Text="Список товаров" HorizontalAlignment="Center"/>
+        <ListBox Name="lstProduct" Margin="10" ItemTemplate="{StaticResource templateProduct}" HorizontalContentAlignment="Stretch"/>
+    </StackPanel>
+</Window>
